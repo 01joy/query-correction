@@ -10,9 +10,11 @@ from preprocess_sohu_news import preprocess_sohu_news
 from trans import find_words
 import copy
 
-sohu_path=r'/root/data/news_sohusite_xml.100000.dat'
+sohu_path=r'../data/news_sohusite_xml.100000.dat'
 w2p = "../data/word2pinyin.json"
 p2w = '../data/pinyin2word.json'
+N = 3 # n-gram
+M = 5 # print list number
 #sentence = '刘得华'
 
 news=preprocess_sohu_news(sohu_path)
@@ -25,7 +27,7 @@ for one_news in news:
             chars.append(c.strip())
     text.append(chars)
 
-ng = NGram(text, 3)
+ng = NGram(text, N)
 
 while True:
     sentence = input('please input your query:')
@@ -41,6 +43,7 @@ while True:
             corrections.append([corr,ng.cal_sentence_prob(corr)])
     
     corrections=sorted(corrections,key=lambda x:x[1],reverse=True)
-    print(corrections[0])
+    for i in range(min(len(corrections), M)):
+        print('%d\t%s\t%e'%(i, corrections[i][0], corrections[i][1]))
 
     
