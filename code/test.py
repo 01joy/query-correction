@@ -10,7 +10,7 @@ from preprocess_sohu_news import preprocess_sohu_news
 from trans import find_words
 import copy
 
-sohu_path=r'../data/news_sohusite_xml.100000.dat'
+sohu_path=r'../data/news_sohusite_xml.smarty.dat'
 w2p = "../data/word2pinyin.json"
 p2w = '../data/pinyin2word.json'
 N = 3 # n-gram
@@ -30,7 +30,9 @@ for one_news in news:
 ng = NGram(text, N)
 
 while True:
-    sentence = input('please input your query:')
+    sentence = input('please input your query, q for quit:')
+    if sentence.strip() == 'q':
+        break
     sentence = [i for i in sentence]
     corrections=[]
     
