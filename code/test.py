@@ -10,6 +10,7 @@ Created on Sun Aug 25 23:59:57 2019
 from trans import find_words
 import copy
 import pickle
+import readline
 
 model_path=r'n-gram.model'
 w2p = "../data/w2p_v2.json"
