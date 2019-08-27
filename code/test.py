@@ -28,7 +28,7 @@ while True:
     
     for i,c in enumerate(sentence):
         sent=copy.deepcopy(sentence)
-        cands = find_words(c, config.w2p_path, config.p2w_path, config.pp_err_path)
+        cands = find_words(c)
         for cand, pinyin_prob in cands.items():
             sent[i]=cand
             corr = ''.join(sent)
