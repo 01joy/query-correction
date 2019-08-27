@@ -30,7 +30,10 @@ while True:
         for cand, pinyin_prob in cands.items():
             sent[i]=cand
             corr = ' '.join(sent)
-            corrections.append([corr,pinyin_prob*model.score(corr)])
+            lm_prob = model.score(corr, bos = True, eos = True)
+            lm_prob = pow(10, lm_prob)
+#            print(corr,pinyin_prob,lm_prob)
+            corrections.append([corr, pinyin_prob * lm_prob])
     
     corrections=sorted(corrections,key=lambda x:x[1],reverse=True)
     for i in range(min(len(corrections), config.num_show)):
