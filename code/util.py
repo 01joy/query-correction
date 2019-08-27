@@ -13,7 +13,7 @@ def is_chinese(uchar):
     else:
         return False
     
-def clean_data(texts, dest_path):
+def clean_data(texts, dest_path, splitter=''):
     n=len(texts)
     fout=open(dest_path,'w')
     for k, line in enumerate(texts):
@@ -23,5 +23,5 @@ def clean_data(texts, dest_path):
             if c.strip()!='':
                 t.append(c)
         if len(t) > 0:
-            fout.write(''.join(t)+'\n')
+            fout.write(splitter.join(t)+'\n')
     fout.close()

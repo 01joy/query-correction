@@ -25,6 +25,8 @@ def preprocess_sohu_news(sohu_path):
 if __name__ == '__main__':
     sohu_path=r'/Users/bytedance/Documents/datasets/news_sohusite_xml-utf8-1000.dat'
     sohu_clean=r'/Users/bytedance/Documents/datasets/news_sohusite_clean-utf8-1000.dat'
+    sohu_clean_space=r'/Users/bytedance/Documents/datasets/news_sohusite_clean_space-utf8-1000.dat'
     news=preprocess_sohu_news(sohu_path)
     util.clean_data(news,sohu_clean)
+    util.clean_data(news,sohu_clean_space,' ')
     
