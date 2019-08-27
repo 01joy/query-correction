@@ -10,10 +10,10 @@ from preprocess_sohu_news import preprocess_sohu_news
 from trans import find_words
 import copy
 
-sohu_path=r'C:\D\Hobby\Deeplearning\ByteCamp\query-correction\data\news_sohusite_xml.smarty.dat'
-w2p = "../data/word2pinyin.json"
-p2w = '../data/pinyin2word.json'
-sentence = '中锅人'
+sohu_path=r'./data/news_sohusite_xml.smarty.dat'
+w2p = "./data/w2p_v2.json"
+p2w = './data/p2w_v2.json'
+sentence = '吃屎叶到了怎么办'
 
 
 news=preprocess_sohu_news(sohu_path)

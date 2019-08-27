@@ -17,12 +17,13 @@ def find_words(ch, w2p, p2w):
         words = []
     for pinyin in pinyins:
         words.extend(pinyin2word[pinyin])
+    words = {}.fromkeys(words).keys()
     return words
 
 if __name__ == "__main__":
 
-    w2p = "../data/word2pinyin.json"
-    p2w = '../data/pinyin2word.json'
+    w2p = "../data/w2p_v2.json"
+    p2w = '../data/p2w_v2.json'
     str = "孙点生"
     for ch in str:
         words = find_words(ch, w2p, p2w)
