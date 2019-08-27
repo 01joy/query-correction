@@ -10,6 +10,8 @@ from preprocess_sohu_news import preprocess_sohu_news
 from trans import find_words
 import copy
 
+import readline
+
 sohu_path=r'../data/news_sohusite_xml.smarty.dat'
 w2p = "../data/w2p_v2.json"
 p2w = '../data/p2w_v2.json'
@@ -31,6 +33,7 @@ ng = NGram(text, N)
 
 while True:
     sentence = input('please input your query, q for quit:')
+    print(sentence)
     if sentence.strip() == 'q':
         break
     sentence = [i for i in sentence]
