@@ -8,10 +8,11 @@ Created on Tue Aug 27 20:13:54 2019
 
 num_gram = 3 # n-gram
 num_show = 5 # print list number
-num_corpus = 1000
+num_corpus = 100000
 
-sohu_path = r'/Users/bytedance/Downloads/news_sohusite_xml-utf8-%d.dat'%num_corpus
-model_path = r'/Users/bytedance/Downloads/models/%d-gram-%d.model'%(num_gram, num_corpus)
+root = r'/Users/bytedance/Documents'
+sohu_path = r'%s/datasets/news_sohusite_xml-utf8-%d.dat'%(root, num_corpus)
+model_path = r'%s/models/%d-gram-%d.model'%(root, num_gram, num_corpus)
 
 p_err_path = '../data/pp_err.json'
 w2p_path = "../data/w2p_v2.json"
@@ -22,5 +23,5 @@ same_stroke_path = '../data/same_stroke.json'
 p_same_stroke = 0.5
 
 
-sohu_big_path=r'/Users/bytedance/Downloads/news_sohusite_xml-utf8.dat'
+sohu_big_path=r'%s/datasets/news_sohusite_xml-utf8.dat'%root
 end_flag='</doc>'
