@@ -12,7 +12,7 @@ import copy
 
 import readline
 
-sohu_path=r'../data/news_sohusite_xml.smarty.dat'
+sohu_path=r'../data/news_sohusite_xml.smarty-utf8.dat'
 w2p = "../data/w2p_v2.json"
 p2w = '../data/p2w_v2.json'
 N = 3 # n-gram

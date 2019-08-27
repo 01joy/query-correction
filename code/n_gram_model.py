@@ -39,7 +39,7 @@ class NGram:
     
 if __name__ == '__main__':
     
-    sohu_path=r'C:\D\Hobby\Deeplearning\ByteCamp\query-correction\data\news_sohusite_xml.smarty.dat'
+    sohu_path=r'../data/news_sohusite_xml.smarty-utf8.dat'
     
     news=preprocess_sohu_news(sohu_path)
     

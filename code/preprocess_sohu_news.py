@@ -6,7 +6,7 @@ Created on Sat Aug 24 22:37:08 2019
 """
 
 def preprocess_sohu_news(sohu_path):
-    fin=open(sohu_path,encoding='gb2312',errors='ignore')
+    fin=open(sohu_path,encoding='utf-8',errors='ignore')
     lines=fin.readlines()
     fin.close()
     
@@ -22,5 +22,5 @@ def preprocess_sohu_news(sohu_path):
     return news
 
 if __name__ == '__main__':
-    sohu_path=r'C:\D\Hobby\Deeplearning\ByteCamp\query-correction\data\news_sohusite_xml.smarty.dat'
+    sohu_path=r'../data/news_sohusite_xml.smarty-utf8.dat'
     news=preprocess_sohu_news(sohu_path)

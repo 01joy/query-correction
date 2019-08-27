@@ -21,7 +21,7 @@ def convert_file_to_utf8(sourceFileName,targetFileName,sourceEncoding):
                 
                 
 if __name__ == '__main__':
-    sourceFileName=r'C:\D\Hobby\Deeplearning\ByteCamp\query-correction\data\news_sohusite_xml.smarty.dat'
-    targetFileName=r'C:\D\Hobby\Deeplearning\ByteCamp\query-correction\data\news_sohusite_xml.smarty-utf8.dat'
+    sourceFileName=r'../data/news_sohusite_xml.smarty.dat'
+    targetFileName=r'../data/news_sohusite_xml.smarty-utf8.dat'
     sourceEncoding='gb2312'
     convert_file_to_utf8(sourceFileName,targetFileName,sourceEncoding)
