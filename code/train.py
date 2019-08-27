@@ -8,14 +8,10 @@ Created on Sun Aug 25 23:59:57 2019
 from n_gram_model import NGram
 from preprocess_sohu_news import preprocess_sohu_news
 import pickle
+import config
 
-N = 3 # n-gram
-sohu_path=r'/Users/bytedance/Downloads/news_sohusite_xml-utf8-10000.dat'
-model_path=r'%d-gram.model'%N
 
-#sentence = '刘得华'
-
-news=preprocess_sohu_news(sohu_path)
+news=preprocess_sohu_news(config.sohu_path)
 
 text=[]
 for one_news in news:
@@ -25,9 +21,9 @@ for one_news in news:
             chars.append(c.strip())
     text.append(chars)
 
-ng = NGram(text, N)
+ng = NGram(text, config.num_gram)
 
 
-f = open(model_path, 'wb')
+f = open(config.model_path, 'wb')
 pickle.dump(ng, f)
 f.close()

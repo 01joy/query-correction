@@ -1,14 +1,11 @@
-n=10000
-big=r'/Users/bytedance/Downloads/news_sohusite_xml-utf8.dat'
-small=r'/Users/bytedance/Downloads/news_sohusite_xml-utf8-%d.dat'%n
-flag='</doc>'
+import config
 
-fin=open(big,encoding='utf-8',errors='ignore')
-fout=open(small,'w')
+fin=open(config.sohu_big_path,encoding='utf-8',errors='ignore')
+fout=open(config.sohu_path,'w')
 
 for i,line in enumerate(fin):
 	fout.write(line)
-	if i>=n and flag in line:
+	if i>=config.num_corpus and config.end_flag in line:
 		break
 fin.close()
 fout.close()
