@@ -9,9 +9,10 @@ from n_gram_model import NGram
 from preprocess_sohu_news import preprocess_sohu_news
 import pickle
 
-sohu_path=r'/Users/bytedance/Downloads/news_sohusite_xml-utf8-10000.dat'
-model_path=r'n-gram.model'
 N = 3 # n-gram
+sohu_path=r'/Users/bytedance/Downloads/news_sohusite_xml-utf8-10000.dat'
+model_path=r'%d-gram.model'%N
+
 #sentence = '刘得华'
 
 news=preprocess_sohu_news(sohu_path)

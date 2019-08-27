@@ -12,7 +12,8 @@ import copy
 import pickle
 import readline
 
-model_path=r'n-gram.model'
+N = 3 # n-gram
+model_path=r'%d-gram.model'%N
 w2p = "../data/w2p_v2.json"
 p2w = '../data/p2w_v2.json'
 pp_err_path = '../data/pp_err.json'
