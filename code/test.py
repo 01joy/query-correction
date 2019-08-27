@@ -15,6 +15,7 @@ import readline
 model_path=r'n-gram.model'
 w2p = "../data/w2p_v2.json"
 p2w = '../data/p2w_v2.json'
+pp_err_path = '../data/pp_err.json'
 
 M = 5 # print list number
 
@@ -32,7 +33,7 @@ while True:
     
     for i,c in enumerate(sentence):
         sent=copy.deepcopy(sentence)
-        cands = find_words(c, w2p, p2w)
+        cands = find_words(c, w2p, p2w, pp_err_path):
         for cand in cands:
             sent[i]=cand
             corr = ''.join(sent)
