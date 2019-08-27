@@ -7,7 +7,7 @@ Created on Sat Aug 24 23:45:08 2019
 
 import codecs
 
-BLOCKSIZE = 1048576 # or some other, desired size in bytes
+BLOCKSIZE = 504857600 # or some other, desired size in bytes
 
 def convert_file_to_utf8(sourceFileName,targetFileName,sourceEncoding):
 
@@ -21,7 +21,7 @@ def convert_file_to_utf8(sourceFileName,targetFileName,sourceEncoding):
                 
                 
 if __name__ == '__main__':
-    sourceFileName=r'../data/news_sohusite_xml.smarty.dat'
-    targetFileName=r'../data/news_sohusite_xml.smarty-utf8.dat'
+    sourceFileName=r'/Users/bytedance/Downloads/news_sohusite_xml.dat'
+    targetFileName=r'/Users/bytedance/Downloads/news_sohusite_xml-utf8.dat'
     sourceEncoding='gb2312'
     convert_file_to_utf8(sourceFileName,targetFileName,sourceEncoding)

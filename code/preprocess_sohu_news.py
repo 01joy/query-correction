@@ -22,5 +22,5 @@ def preprocess_sohu_news(sohu_path):
     return news
 
 if __name__ == '__main__':
-    sohu_path=r'../data/news_sohusite_xml.smarty-utf8.dat'
+    sohu_path=r'/Users/bytedance/Downloads/news_sohusite_xml-utf8-100000.dat'
     news=preprocess_sohu_news(sohu_path)

@@ -1,9 +1,9 @@
-big=r'/root/data/news_sohusite_xml.dat'
-small=r'../data/news_sohusite_xml.200000.dat'
+n=10000
+big=r'/Users/bytedance/Downloads/news_sohusite_xml-utf8.dat'
+small=r'/Users/bytedance/Downloads/news_sohusite_xml-utf8-%d.dat'%n
 flag='</doc>'
-n=200000
 
-fin=open(big,encoding='gb2312',errors='ignore')
+fin=open(big,encoding='utf-8',errors='ignore')
 fout=open(small,'w')
 
 for i,line in enumerate(fin):
