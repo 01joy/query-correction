@@ -33,7 +33,7 @@ while True:
     
     for i,c in enumerate(sentence):
         sent=copy.deepcopy(sentence)
-        cands = find_words(c, w2p, p2w, pp_err_path):
+        cands = find_words(c, w2p, p2w, pp_err_path)
         for cand in cands:
             sent[i]=cand
             corr = ''.join(sent)
