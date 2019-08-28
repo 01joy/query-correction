@@ -17,13 +17,23 @@ import util
 import kenlm
 model = kenlm.Model(config.model_path)
 
-correct_cnt = 0
+test_path = '.'
+with open(test_path, 'r', encoding = 'utf-8') as f:
+    lines = f.readlines()
 
-while True:
-    sentence = input('please input your query, q for quit:')
-    print(sentence)
-    if sentence.strip() == 'q':
-        break
+for line in lines:
+    line = line.split()
+    sentence = copy.deepcopy(line[1])
+#if sentence.strip() == 'q':
+#break
+    if len(line) == 4:
+        ty = 4
+    else:
+        ty = line[2]
+    
+    cnt_type = [0] * 4
+    print(cnt_type)
+
     sentence = [i for i in sentence]
     corrections=[]
     
@@ -53,10 +63,10 @@ while True:
     corrections=sorted(corrections,key=lambda x:x[1],reverse=True)
 
     result = ''.join(corrections[0][0].split())
-    origin = ''.join(sentence)
+    origin = ''.join(line[0])
 
     if result == origin:
-        correct_cnt = correct_cnt + 1
+        cnt_type[ty] = correct_type[ty] + 1
     print(result)
     print(result)
     print(correct_cnt)
