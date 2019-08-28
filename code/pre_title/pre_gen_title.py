@@ -50,7 +50,7 @@ def trans(origin):
     
     return dst
     
-def gen(origin_str, fo):
+def gen(origin_str):
     p = 0.5
     origin_str = del_not_chinese(origin_str)
     if len(origin_str) <= 1:
@@ -62,20 +62,41 @@ def gen(origin_str, fo):
         if len(origin_str) >= 4 and random.random() < p:
             dst = trans(dst)
         
-        print(origin_str + '\t' + ''.join(dst), file = fo)
+        if(len(origin_str) != len(''.join(dst))):
+            continue
+
+        with open(out_path, 'a', encoding = 'utf-8') as fo:
+            print(origin_str + '\t' + ''.join(dst), file = fo)
+
+M = 10000
 
 def work_sogou(in_path, out_path):
-    with open(in_path, 'r', encoding = 'gb2312', errors = 'ignore') as f, open(out_path, 'a', encoding = 'utf-8') as fo:
-        for line in f:
-            origin_str = re.split('\[|\]', line)[1]
-            gen(origin_str, fo)
+    print('load' + in_path)
+    with open(in_path, 'r', encoding = 'gb2312', errors = 'ignore') as f:
+        lines = f.readlines()
+    print('finished load' + in_path)
+    sz = len(lines)
+    cnt = 1
+    for line in lines:
+        origin_str = re.split('\[|\]', line)[1]
+        gen(origin_str)
+        cnt = cnt + 1
+        if cnt % M == 0:
+            print(str(cnt) + '/' + str(sz))
 
 def work_wiki(in_path, out_path):
-    with open(in_path, 'r', encoding = 'gb2312', errors = 'ignore') as f, open(out_path, 'a', encoding = 'utf-8') as fo:
-        for line in f:
-            js = json.loads(line)
-            origin_str = js['title']
-            gen(origin_str, fo)
+    print('load' + in_path)
+    with open(in_path, 'r', encoding = 'gb2312', errors = 'ignore') as f:
+        lines = f.readlines()
+    print('finished load' + in_path)
+    sz = len(lines)
+    cnt = 1
+    for line in lines:
+        js = json.loads(line)
+        origin_str = js['title']
+        gen(origin_str)
+        if cnt % M == 0:
+            print(str(cnt) + '/' + str(sz))
             
 def find_paths(directory):
     ans=[]
@@ -96,17 +117,17 @@ if __name__ == '__main__':
     paths = find_paths(in_path_wiki)
     for lists in paths:
         path = os.path.join(in_path_wiki, lists)
-        print(path)
+#print(path)
         work_wiki(path, out_path)
 
     paths = find_paths(in_path_webtext)
     for lists in paths:
         path = os.path.join(in_path_webtext, lists)
-        print(path)
+#print(path)
         work_wiki(path, out_path)
 
     paths = find_paths(in_path_sogou)
     for lists in paths:
         path = os.path.join(in_path_sogou, lists)
-        print(path)
+#print(path)
         work_sogou(path, out_path)
