@@ -7,11 +7,11 @@ import json
 import os
 
 datasets_path = '../../data/'
-out_path = datasets_path + 'search_word_total.txt'
+out_path = datasets_path + 'search_word_wiki.txt'
 
-same_usually_path = '../../data/usually.txt'
-same_stroke_path = '../../data/same_stroke.json'
-same_pinyin_path = '../../data/quanpin.json'
+same_usually_path = datasets_path + 'usually.txt'
+same_stroke_path = datasets_path + 'same_stroke.json'
+same_pinyin_path = datasets_path + 'quanpin.json'
 
 with open(same_stroke_path, 'r', encoding = 'utf-8') as f:
     same_words = json.load(f)
@@ -77,6 +77,12 @@ def work_wiki(in_path, out_path):
             origin_str = js['title']
             gen(origin_str, fo)
             
+def find_paths(directory):
+    ans=[]
+    for dirpath,_,filenames in os.walk(directory):
+        for f in filenames:
+            ans.append(os.path.abspath(os.path.join(dirpath, f)))
+    return ans
 
 if __name__ == '__main__':
     if os.path.exists(out_path):
@@ -87,17 +93,22 @@ if __name__ == '__main__':
     in_path_wiki = datasets_path + 'pre_title/wiki/'
     in_path_webtext = datasets_path + 'pre_title/webtext/'
 
-
-    for lists in os.listdir(in_path_wiki):
+    paths = find_paths(in_path_wiki)
+    for lists in paths:
         path = os.path.join(in_path_wiki, lists)
+        print(path)
         work_wiki(path, out_path)
 
-    for lists in os.listdir(in_path_webtext):
+    paths = find_paths(in_path_webtext)
+    for lists in paths:
         path = os.path.join(in_path_webtext, lists)
+        print(path)
         work_wiki(path, out_path)
 
     '''
-    for lists in os.listdir(in_path)
-        path = os.path.join(in_path, lists)
+    paths = find_paths(in_path_sogou)
+    for lists in paths:
+        path = os.path.join(in_path_sogou, lists)
+        print(path)
         work_sogou(path, out_path)
     '''
