@@ -7,11 +7,11 @@ import json
 import os
 
 datasets_path = '../../../datasets/'
-out_path = datasets_path + 'search_word_total.txt'
+out_path = datasets_path + 'search_word_total_2.txt'
 
-same_usually_path = '../data/usually.txt'
-same_stroke_path = '../data/same_stroke.json'
-same_pinyin_path = '../data/quanpin.json'
+same_usually_path = '../../data/usually.txt'
+same_stroke_path = '../../data/same_stroke.json'
+same_pinyin_path = '../../data/quanpin.json'
 
 with open(same_stroke_path, 'r', encoding = 'utf-8') as f:
     same_words = json.load(f)
@@ -110,9 +110,9 @@ if __name__ == '__main__':
         os.remove(out_path)
     open(out_path, 'w')
 
-    in_path_sogou = datasets_path + 'pre_title/sogou/'
-    in_path_wiki = datasets_path + 'pre_title/wiki/'
-    in_path_webtext = datasets_path + 'pre_title/webtext/'
+    in_path_sogou = datasets_path + 'pre_title/SogouQ/'
+    in_path_wiki = datasets_path + 'pre_title/wiki_zh/'
+    in_path_webtext = datasets_path + 'pre_title/webtext2019zh/'
 
     paths = find_paths(in_path_wiki)
     for lists in paths:
