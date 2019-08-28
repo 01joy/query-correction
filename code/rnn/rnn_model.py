@@ -29,8 +29,8 @@ for line in fin:
 
 fin.close()
 
-xs=xs[:8]
-ys=ys[:8]
+xs=xs[:100]
+ys=ys[:100]
 
 X_train, X_test, y_train, y_test = train_test_split(xs, ys, test_size=0.2, random_state=42)
 
@@ -112,7 +112,11 @@ with torch.no_grad():
     print('initial correction: %s\n'%get_sequence(tag_scores,ix_to_word))
 
 nepoch=300
+train_loss = []
+test_losss = []
 for epoch in range(nepoch):  # again, normally you would NOT do 300 epochs, it is toy data
+    cur_train_loss = 0
+    cur_test_loss = 0
     for sentence, tags in zip(X_train, y_train):
         # Step 1. Remember that Pytorch accumulates gradients.
         # We need to clear them out before each instance
@@ -132,7 +136,18 @@ for epoch in range(nepoch):  # again, normally you would NOT do 300 epochs, it i
         loss = loss_function(tag_scores, targets)
         loss.backward()
         optimizer.step()
-    print('epoch=%d/%d'%(epoch,nepoch))
+        cur_train_loss += loss.item()
+    cur_train_loss /= len(X_train)
+
+
+    with torch.no_grad():
+        for sentence, tags in zip(X_test, y_test):
+            sentence_in = prepare_sequence(sentence, word_to_ix)
+            targets = prepare_sequence(tags, word_to_ix)
+            tag_scores = model(sentence_in)
+            cur_test_loss += loss_function(tag_scores, targets)
+        cur_test_loss /= len(X_test)
+    print('epoch=%d/%d,train_loss=%f,test_loss=%f'%(epoch,nepoch,cur_train_loss,cur_test_loss))
 
 # See what the scores are after training
 with torch.no_grad():
