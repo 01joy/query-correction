@@ -6,12 +6,12 @@ import copy
 import json
 import os
 
-datasets_path = '../../data/'
-out_path = datasets_path + 'search_word_wiki.txt'
+datasets_path = '../../../datasets/'
+out_path = datasets_path + 'search_word_total.txt'
 
-same_usually_path = datasets_path + 'usually.txt'
-same_stroke_path = datasets_path + 'same_stroke.json'
-same_pinyin_path = datasets_path + 'quanpin.json'
+same_usually_path = '../data/usually.txt'
+same_stroke_path = '../data/same_stroke.json'
+same_pinyin_path = '../data/quanpin.json'
 
 with open(same_stroke_path, 'r', encoding = 'utf-8') as f:
     same_words = json.load(f)
@@ -105,10 +105,8 @@ if __name__ == '__main__':
         print(path)
         work_wiki(path, out_path)
 
-    '''
     paths = find_paths(in_path_sogou)
     for lists in paths:
         path = os.path.join(in_path_sogou, lists)
         print(path)
         work_sogou(path, out_path)
-    '''
