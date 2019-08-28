@@ -22,7 +22,7 @@ def preprocess_wiki(wiki_folder):
             linestr=line.strip()
             l=linestr.index(start_mark)+len(start_mark)+2
             txt=linestr[l:-4].strip()
-            txt=txt.replace('\\n')
+            txt=txt.replace('\\n','')
             txt=''.join(txt.splitlines())
             if len(txt)>1:
                 wikis.append(txt)
