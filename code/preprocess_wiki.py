@@ -20,8 +20,9 @@ def preprocess_wiki(wiki_folder):
         
         for line in lines:
             linestr=line.strip()
-            l=linestr.index(start_mark)+len(start_mark)
-            txt=linestr[l:-1].strip()
+            l=linestr.index(start_mark)+len(start_mark)+2
+            txt=linestr[l:-4].strip()
+            txt=txt.replace('\\n')
             txt=''.join(txt.splitlines())
             if len(txt)>1:
                 wikis.append(txt)
