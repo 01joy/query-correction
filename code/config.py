@@ -12,7 +12,7 @@ num_corpus = 100000
 
 root = r'/root/bytecamp2019'
 sohu_path = r'%s/datasets/news_sohusite_xml-utf8-%d.dat'%(root, num_corpus)
-model_path = r'%s/models/news_sohusite.binary'%(root)
+model_path = r'%s/models/3in1-3gram.binary'%(root)
 
 p_err_path = '../data/pp_err.json'
 w2p_path = "../data/w2p_v2.json"
