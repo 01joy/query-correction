@@ -25,3 +25,15 @@ def clean_data(texts, dest_path, splitter=''):
         if len(t) > 0:
             fout.write(splitter.join(t)+'\n')
     fout.close()
+    
+    
+def has_letters(seq):
+    l=-1
+    r=-1
+    seq=[i.lower() for i in seq]
+    for i, c in enumerate(seq):
+        if c>='a' and c<='z' and l==-1:
+            l=i
+        if c>='a' and c<='z':
+            r=i
+    return l,r+1
