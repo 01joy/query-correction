@@ -74,7 +74,8 @@ if __name__ == '__main__':
         os.remove(out_path)
     open(out_path, 'w')
 
-    in_path = '../data/search'
+    in_path = '../../dataset/SogouQ'
     for lists in os.listdir(in_path):
         path = os.path.join(in_path, lists)
+		print(path)
         work(path, out_path)
