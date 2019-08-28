@@ -51,8 +51,9 @@ def work(in_path, out_path):
         pinyin_words = json.load(f)
 
 
-    with open(in_path, 'r', encoding = 'utf-8') as f, open(out_path, 'a', encoding = 'utf-8') as fo:
+    with open(in_path, 'r', encoding = 'gb2312', errors = 'ignore') as f, open(out_path, 'a', encoding = 'utf-8') as fo:
         for line in f:
+#line = line.decode('GBK').encode('utf8')
             origin_str = re.split('\[|\]', line)[1]
             origin_str = del_not_chinese(origin_str)
             if len(origin_str) <= 1:
@@ -74,8 +75,8 @@ if __name__ == '__main__':
         os.remove(out_path)
     open(out_path, 'w')
 
-    in_path = '../../dataset/SogouQ'
+    in_path = '../../datasets/SogouQ/'
     for lists in os.listdir(in_path):
         path = os.path.join(in_path, lists)
-		print(path)
+        print(path)
         work(path, out_path)
