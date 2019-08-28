@@ -25,3 +25,8 @@ p_same_stroke = 0.5
 
 sohu_big_path=r'%s/datasets/news_sohusite_xml-utf8.dat'%root
 end_flag='</doc>'
+
+
+
+wiki_folder = r'%s/datasets/wiki_zh'%root
+wiki_file = r'%s/datasets/wiki_zh_clean_space.dat'%root

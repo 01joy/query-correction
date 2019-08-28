@@ -37,3 +37,14 @@ def has_letters(seq):
         if c>='a' and c<='z':
             r=i
     return l,r+1
+
+
+import os
+# 传入一个文件夹路径
+# 返回该文件夹内所有文件的绝对路径list
+def absoluteFilePaths(directory):
+    ans=[]
+    for dirpath,_,filenames in os.walk(directory):
+        for f in filenames:
+            ans.append(os.path.abspath(os.path.join(dirpath, f)))
+    return ans
