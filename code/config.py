@@ -30,3 +30,6 @@ end_flag='</doc>'
 
 wiki_folder = r'%s/datasets/wiki_zh'%root
 wiki_file = r'%s/datasets/wiki_zh_clean_space.dat'%root
+
+webtext_path = r'%s/datasets/webtext2019zh/web_text_zh_train.json'%root
+webtext_clean_path = r'%s/datasets/webtext2019zh/web_text_zh_train_clean_space.dat'%root
