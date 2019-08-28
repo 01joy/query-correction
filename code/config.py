@@ -33,3 +33,7 @@ wiki_file = r'%s/datasets/wiki_zh_clean_space.dat'%root
 
 webtext_path = r'%s/datasets/webtext2019zh/web_text_zh_train.json'%root
 webtext_clean_path = r'%s/datasets/web_text_zh_train_clean_space.dat'%root
+
+big_generated_txt = r'/Users/bytedance/Documents/datasets/search_word.txt'
+EMBEDDING_DIM = 100
+HIDDEN_DIM = 200

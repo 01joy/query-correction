@@ -85,9 +85,7 @@ class BiLSTMCorrecter(nn.Module):
         # a new batch as a continuation of a sequence
         self.batch_size, seq_len = X.size()
         self.hidden = self.init_hidden()
-
         
-
         # ---------------------
         # 1. embed the input
         # Dim transformation: (batch_size, seq_len, 1) -> (batch_size, seq_len, embedding_dim)
@@ -158,9 +156,6 @@ class BiLSTMCorrecter(nn.Module):
         return ce_loss
 
 
-
-
-
     # def forward(self, sentences, sentence_length):
     #     # reset the LSTM hidden state. Must be done before you run a new batch. Otherwise the LSTM will treat
     #     # a new batch as a continuation of a sequence
@@ -212,9 +207,9 @@ class BiLSTMCorrecter(nn.Module):
 #    tag_scores = model(inputs)
 #    print('trained correction: %s\n'%get_sequence(tag_scores,ix_to_word))
 #    
-#    
-    
-def train(args, model, device, X, y, optimizer, batch_size, epoch, padding_idx):
+#   
+
+def train(args, model, device, X, y, optimizer, batch_size, epoch, target_size,padding_idx):
     X, y = shuffle(X, y)
     model.train()
     k = 0   
@@ -255,7 +250,14 @@ def train(args, model, device, X, y, optimizer, batch_size, epoch, padding_idx):
         optimizer.zero_grad()
         output = model(data, X_lengths)
         #loss = F.nll_loss(output, target)
-        loss = model.loss(output,target,X_lengths)
+        #loss = model.loss(output,target,X_lengths)
+
+        target = target.view(-1)
+        # flatten all predictions
+        output = output.view(-1, target_size)
+
+        loss = F.nll_loss(output, target)
+
         loss.backward()
         optimizer.step()
 #        if batch_idx % args.log_interval == 0:
@@ -263,7 +265,7 @@ def train(args, model, device, X, y, optimizer, batch_size, epoch, padding_idx):
 #                epoch, batch_idx * len(data), len(train_loader.dataset),
 #                100. * batch_idx / len(train_loader), loss.item()))
 
-def test(args, model, device, X, y, batch_size, padding_idx, test_name):
+def test(args, model, device, X, y, batch_size, target_size, padding_idx, test_name):
     model.eval()
     test_loss = 0
     correct = 0
@@ -310,19 +312,13 @@ def test(args, model, device, X, y, batch_size, padding_idx, test_name):
             data, target = tensor_X_train.to(device), tensor_y_train.to(device)
             output = model(data, X_lengths)
             #loss = F.nll_loss(output, target)
-            test_loss += model.loss(output,target,X_lengths)*sum(X_lengths)
+            #test_loss += model.loss(output,target,X_lengths)*sum(X_lengths)
 
+            target = target.view(-1)
+            # flatten all predictions
+            output = output.view(-1, target_size)
 
-
-
-
-
-
-
-
-
-
-
+            test_loss += F.nll_loss(output, target, reduction='sum').item()
 
 
         # for data, target in test_loader:
@@ -349,7 +345,7 @@ def main():
                         help='input batch size for training (default: 64)')
     parser.add_argument('--test-batch-size', type=int, default=2, metavar='N',
                         help='input batch size for testing (default: 1000)')
-    parser.add_argument('--epochs', type=int, default=300, metavar='N',
+    parser.add_argument('--epochs', type=int, default=100, metavar='N',
                         help='number of epochs to train (default: 10)')
     parser.add_argument('--lr', type=float, default=0.001, metavar='LR',
                         help='learning rate (default: 0.01)')
@@ -441,9 +437,9 @@ def main():
     test_loss=[]
     for epoch in range(1, args.epochs + 1):
         print('epoch=%d'%epoch)
-        train(args, model, device, X_train, y_train, optimizer, args.batch_size, epoch, word_to_ix['<PAD>'])
-        train_loss.append(test(args, model, device, X_train, y_train, args.batch_size, word_to_ix['<PAD>'], 'Train').item())
-        test_loss.append(test(args, model, device, X_test, y_test, args.batch_size, word_to_ix['<PAD>'], 'Test').item())
+        train(args, model, device, X_train, y_train, optimizer, args.batch_size, epoch, len(word_to_ix), word_to_ix['<PAD>'])
+        train_loss.append(test(args, model, device, X_train, y_train, args.batch_size, len(word_to_ix), word_to_ix['<PAD>'], 'Train'))
+        test_loss.append(test(args, model, device, X_test, y_test, args.batch_size, len(word_to_ix), word_to_ix['<PAD>'], 'Test'))
 
     # train_loss_final, y_train_true, y_train_pred = test(args, model, device, train_loader, 'Train')
     # test_loss_final, y_test_true, y_test_pred = test(args, model, device, test_loader, 'Test')
