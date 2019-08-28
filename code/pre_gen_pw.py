@@ -24,9 +24,9 @@ def find_word_pinyin(word_path, pinyin_path, out_path):
 
 if __name__ == '__main__':
 #quanpin_word_path = '../data/quanpin_word.txt'
-    quanpin_word_path = '../data/news_sohusite_xml-utf8.txt'
+    quanpin_word_path = '../../datasets/news_sohusite_xml-utf8.txt'
 #quanpin_pinyin_path = '../data/quanpin_pinyin.txt'
-    quanpin_pinyin_path = '../data/news_sohusite_xml-utf8.pinyin'
+    quanpin_pinyin_path = '../../datasets/news_sohusite_xml-utf8.pinyin'
     out_path = '../data/quanpin.json'
     find_word_pinyin(quanpin_word_path, quanpin_pinyin_path, out_path)
 

@@ -24,9 +24,9 @@ def preprocess_sohu_news(sohu_path):
     return news
 
 if __name__ == '__main__':
-    sohu_path=r'/Users/bytedance/Documents/datasets/news_sohusite_xml-utf8-100000.dat'
-    sohu_clean=r'/Users/bytedance/Documents/datasets/news_sohusite_clean-utf8-100000.dat'
-    sohu_clean_space=r'/Users/bytedance/Documents/datasets/news_sohusite_clean_space-utf8-100000.dat'
+    sohu_path=r'/root/bytecamp2019/datasets/news_sohusite_xml-utf8.dat'
+    sohu_clean=r'/root/bytecamp2019/datasets/news_sohusite_clean-utf8.dat'
+    sohu_clean_space=r'/root/bytecamp2019/datasets/news_sohusite_clean_space-utf8.dat'
     news=preprocess_sohu_news(sohu_path)
     util.clean_data(news,sohu_clean)
     util.clean_data(news,sohu_clean_space,' ')
