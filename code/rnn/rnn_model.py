@@ -29,10 +29,10 @@ for line in fin:
 
 fin.close()
 
-xs=xs[:10]
-ys=ys[:10]
+xs=xs[:8]
+ys=ys[:8]
 
-X_train, X_test, y_train, y_test = train_test_split(xs, ys, test_size=0.33, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(xs, ys, test_size=0.2, random_state=42)
 
 word_to_ix = {'SOS':0, 'EOS':1, 'UNK':2}		# 'SOS': start of sentencex
 ix_to_word = {0:'SOS', 1:'EOS', 2:'UNK'}		# 'EOS': end of sentence
@@ -40,12 +40,15 @@ ix_to_word = {0:'SOS', 1:'EOS', 2:'UNK'}		# 'EOS': end of sentence
 for sent, tags in zip(X_train,y_train):
     for w1,w2 in zip(sent,tags):
         if w1 not in word_to_ix:
-            word_to_ix[w1] = len(word_to_ix)
-            ix_to_word[len(word_to_ix)] = w1
+            cid = len(word_to_ix)
+            word_to_ix[w1] = cid
+            ix_to_word[cid] = w1
         if w2 not in word_to_ix:
-            word_to_ix[w2] = len(word_to_ix)
-            ix_to_word[len(word_to_ix)] = w2
+            cid = len(word_to_ix)
+            word_to_ix[w2] = cid
+            ix_to_word[cid] = w2
 #print(word_to_ix)
+#print(ix_to_word)
 
 def prepare_sequence(seq, to_ix):
     idxs = [0]
@@ -102,15 +105,15 @@ optimizer = optim.SGD(model.parameters(), lr=0.001)
 # See what the scores are before training
 # Note that element i,j of the output is the score for tag j for word i.
 # Here we don't need to train, so the code is wrapped in torch.no_grad()
+print('query: %s\n'%X_train[0])
 with torch.no_grad():
     inputs = prepare_sequence(X_train[0], word_to_ix)
     tag_scores = model(inputs)
-    print(get_sequence(tag_scores,ix_to_word))
+    print('initial correction: %s\n'%get_sequence(tag_scores,ix_to_word))
 
-for epoch in range(300):  # again, normally you would NOT do 300 epochs, it is toy data
-    i=-1
+nepoch=300
+for epoch in range(nepoch):  # again, normally you would NOT do 300 epochs, it is toy data
     for sentence, tags in zip(X_train, y_train):
-        i+=1
         # Step 1. Remember that Pytorch accumulates gradients.
         # We need to clear them out before each instance
         model.zero_grad()
@@ -129,6 +132,7 @@ for epoch in range(300):  # again, normally you would NOT do 300 epochs, it is t
         loss = loss_function(tag_scores, targets)
         loss.backward()
         optimizer.step()
+    print('epoch=%d/%d'%(epoch,nepoch))
 
 # See what the scores are after training
 with torch.no_grad():
@@ -141,4 +145,4 @@ with torch.no_grad():
     # since 0 is index of the maximum value of row 1,
     # 1 is the index of maximum value of row 2, etc.
     # Which is DET NOUN VERB DET NOUN, the correct sequence!
-    print(get_sequence(tag_scores,ix_to_word))
+    print('trained correction: %s\n'%get_sequence(tag_scores,ix_to_word))
