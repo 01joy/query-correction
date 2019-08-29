@@ -359,7 +359,9 @@ def main():
     
     fin=open(config.big_generated_txt)
     for line in fin:
-        y,x = line.strip().split('\t') # 第一列是对的，第二列是错的
+#y,x = line.strip().split('\t') # 第一列是对的，第二列是错的
+        contents = line.strip().split('\t')
+        y,x=contents[0],contents[1]
         xs.append(x)
         ys.append(y)
     
