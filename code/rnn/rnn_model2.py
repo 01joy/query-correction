@@ -47,8 +47,9 @@ def get_sequence(scores, to_word):
 
 class BiLSTMCorrecter(nn.Module):
 
-    def __init__(self, nb_lstm_layers, embedding_dim, hidden_dim, vocab_size, target_size, padding_idx):
+    def __init__(self, device, nb_lstm_layers, embedding_dim, hidden_dim, vocab_size, target_size, padding_idx):
         super(BiLSTMCorrecter, self).__init__()
+        self.device = device
         self.nb_lstm_layers = nb_lstm_layers
         self.embedding_dim = embedding_dim
         self.hidden_dim = hidden_dim
@@ -75,8 +76,8 @@ class BiLSTMCorrecter(nn.Module):
 #            hidden_a = hidden_a.cuda()
 #            hidden_b = hidden_b.cuda()
 
-        hidden_a = Variable(hidden_a).double().to(torch.device("cuda"))
-        hidden_b = Variable(hidden_b).double().to(torch.device("cuda"))
+        hidden_a = Variable(hidden_a).double().to(self.device)
+        hidden_b = Variable(hidden_b).double().to(self.device)
 
         return (hidden_a, hidden_b)
 
@@ -367,8 +368,8 @@ def main():
     
     fin.close()
     
-# xs=xs[:100]
-#ys=ys[:100]
+    xs=xs[:config.max_train_n]
+    ys=ys[:config.max_train_n]
     
     xtrains, xtests, ytrains, ytests = train_test_split(xs, ys, test_size=0.2, random_state=42)
     
@@ -415,7 +416,8 @@ def main():
 #    test_dataset = data_utils.TensorDataset(tensor_X_test, tensor_y_test)
 #    test_loader = data_utils.DataLoader(test_dataset, batch_size=args.batch_size, shuffle=True, **kwargs)
 
-    model = BiLSTMCorrecter(1, config.EMBEDDING_DIM, config.HIDDEN_DIM, len(word_to_ix), len(word_to_ix), word_to_ix['<PAD>']).to(device).double()
+    model = BiLSTMCorrecter(device, 1, config.EMBEDDING_DIM, config.HIDDEN_DIM, len(word_to_ix), len(word_to_ix), word_to_ix['<PAD>']).to(device).double()
+#model = nn.DataParallel(model)
     optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.lr)
 
 
