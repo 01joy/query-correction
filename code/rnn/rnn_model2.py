@@ -326,11 +326,11 @@ def test(args, model, device, X, y, batch_size, target_size, padding_idx, test_n
 def main():
     # Training settings
     parser = argparse.ArgumentParser(description='PyTorch MNIST Example')
-    parser.add_argument('--batch-size', type=int, default=64, metavar='N',
+    parser.add_argument('--batch-size', type=int, default=128, metavar='N',
                         help='input batch size for training (default: 64)')
     parser.add_argument('--test-batch-size', type=int, default=2, metavar='N',
                         help='input batch size for testing (default: 1000)')
-    parser.add_argument('--epochs', type=int, default=100, metavar='N',
+    parser.add_argument('--epochs', type=int, default=500, metavar='N',
                         help='number of epochs to train (default: 10)')
     parser.add_argument('--lr', type=float, default=0.0001, metavar='LR',
                         help='learning rate (default: 0.01)')
@@ -417,6 +417,7 @@ def main():
 #    test_loader = data_utils.DataLoader(test_dataset, batch_size=args.batch_size, shuffle=True, **kwargs)
 
     model = BiLSTMCorrecter(device, 1, config.EMBEDDING_DIM, config.HIDDEN_DIM, len(word_to_ix), len(word_to_ix), word_to_ix['<PAD>']).to(device).double()
+#model = nn.DataParallel(model)
     optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.lr)
 
 
