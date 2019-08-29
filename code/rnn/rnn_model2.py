@@ -97,7 +97,7 @@ class BiLSTMCorrecter(nn.Module):
         # Dim transformation: (batch_size, seq_len, embedding_dim) -> (batch_size, seq_len, nb_lstm_units)
 
         # pack_padded_sequence so that padded items in the sequence won't be shown to the LSTM
-        X = torch.nn.utils.rnn.pack_padded_sequence(X, X_lengths, batch_first=True, enforce_sorted=False)
+        X = torch.nn.utils.rnn.pack_padded_sequence(X, X_lengths, batch_first=True)
 
         # now run through LSTM
         X, self.hidden = self.lstm(X, self.hidden)
@@ -209,6 +209,39 @@ class BiLSTMCorrecter(nn.Module):
 #    
 #   
 
+def preprocess_data(inputs, labels, padding_idx):
+    inputs, labels = zip(*sorted(zip(inputs, labels),key=lambda x: len(x[0]), reverse=True))
+
+    # get the length of each sentence
+    X_lengths = [len(sentence) for sentence in inputs]
+    # create an empty matrix with padding tokens
+    #pad_token = vocab['<PAD>']
+    longest_sent = max(X_lengths)
+    cur_batch_size = len(inputs)
+    padded_X = np.ones((cur_batch_size, longest_sent)) * padding_idx
+    # copy over the actual sequences
+    for i, x_len in enumerate(X_lengths):
+        sequence = inputs[i]
+        padded_X[i, 0:x_len] = sequence[:x_len]
+
+
+    # get the length of each sentence
+    Y_lengths = [len(sentence) for sentence in labels]
+    # create an empty matrix with padding tokens
+    longest_sent = max(Y_lengths)
+    cur_batch_size = len(labels)
+    padded_Y = np.ones((cur_batch_size, longest_sent)) * padding_idx
+    # copy over the actual sequences
+    for i, y_len in enumerate(Y_lengths):
+        sequence = labels[i]
+        padded_Y[i, 0:y_len] = sequence[:y_len]
+
+    tensor_X_train = torch.stack([torch.tensor(i, dtype=torch.long) for i in padded_X]) # transform to torch tensors
+    tensor_y_train = torch.stack([torch.tensor(i, dtype=torch.long) for i in padded_Y])
+
+    return tensor_X_train, tensor_y_train, X_lengths
+
+
 def train(args, model, device, X, y, optimizer, batch_size, epoch, target_size,padding_idx):
     X, y = shuffle(X, y)
     model.train()
@@ -216,47 +249,22 @@ def train(args, model, device, X, y, optimizer, batch_size, epoch, target_size,p
     while k < len(X):
         inputs = X[k:k+batch_size]
         labels = y[k:k+batch_size]
+
         # some computation
         k+= batch_size
-
-        # get the length of each sentence
-        X_lengths = [len(sentence) for sentence in inputs]
-        # create an empty matrix with padding tokens
-        #pad_token = vocab['<PAD>']
-        longest_sent = max(X_lengths)
-        cur_batch_size = len(inputs)
-        padded_X = np.ones((cur_batch_size, longest_sent)) * padding_idx
-        # copy over the actual sequences
-        for i, x_len in enumerate(X_lengths):
-            sequence = inputs[i]
-            padded_X[i, 0:x_len] = sequence[:x_len]
-
-
-        # get the length of each sentence
-        Y_lengths = [len(sentence) for sentence in labels]
-        # create an empty matrix with padding tokens
-        longest_sent = max(Y_lengths)
-        cur_batch_size = len(labels)
-        padded_Y = np.ones((cur_batch_size, longest_sent)) * padding_idx
-        # copy over the actual sequences
-        for i, y_len in enumerate(Y_lengths):
-            sequence = labels[i]
-            padded_Y[i, 0:y_len] = sequence[:y_len]
-    
-        tensor_X_train = torch.stack([torch.tensor(i, dtype=torch.long) for i in padded_X]) # transform to torch tensors
-        tensor_y_train = torch.stack([torch.tensor(i, dtype=torch.long) for i in padded_Y])
-
+        
+        tensor_X_train, tensor_y_train, X_lengths = preprocess_data(inputs, labels, padding_idx)
         data, target = tensor_X_train.to(device), tensor_y_train.to(device)
+
         optimizer.zero_grad()
         output = model(data, X_lengths)
         #loss = F.nll_loss(output, target)
-        #loss = model.loss(output,target,X_lengths)
+        loss = model.loss(output,target,X_lengths)
 
-        target = target.view(-1)
-        # flatten all predictions
-        output = output.view(-1, target_size)
-
-        loss = F.nll_loss(output, target)
+#        target = target.view(-1)
+#        # flatten all predictions
+#        output = output.view(-1, target_size)
+#        loss = F.nll_loss(output, target)
 
         loss.backward()
         optimizer.step()
@@ -274,51 +282,27 @@ def test(args, model, device, X, y, batch_size, target_size, padding_idx, test_n
     with torch.no_grad():
         X, y = shuffle(X, y)
 
-        k = 0   
+        k = 0
+        alllen = 0
         while k < len(X):
             inputs = X[k:k+batch_size]
             labels = y[k:k+batch_size]
             # some computation
             k+= batch_size
 
-            # get the length of each sentence
-            X_lengths = [len(sentence) for sentence in inputs]
-            # create an empty matrix with padding tokens
-            #pad_token = vocab['<PAD>']
-            longest_sent = max(X_lengths)
-            cur_batch_size = len(inputs)
-            padded_X = np.ones((cur_batch_size, longest_sent)) * padding_idx
-            # copy over the actual sequences
-            for i, x_len in enumerate(X_lengths):
-                sequence = inputs[i]
-                padded_X[i, 0:x_len] = sequence[:x_len]
-
-
-            # get the length of each sentence
-            Y_lengths = [len(sentence) for sentence in labels]
-            # create an empty matrix with padding tokens
-            longest_sent = max(Y_lengths)
-            cur_batch_size = len(labels)
-            padded_Y = np.ones((cur_batch_size, longest_sent)) * padding_idx
-            # copy over the actual sequences
-            for i, y_len in enumerate(Y_lengths):
-                sequence = labels[i]
-                padded_Y[i, 0:y_len] = sequence[:y_len]
-
-
-            tensor_X_train = torch.stack([torch.tensor(i, dtype=torch.long) for i in padded_X]) # transform to torch tensors
-            tensor_y_train = torch.stack([torch.tensor(i, dtype=torch.long) for i in padded_Y])
-
+            tensor_X_train, tensor_y_train, X_lengths = preprocess_data(inputs, labels, padding_idx)
             data, target = tensor_X_train.to(device), tensor_y_train.to(device)
+
             output = model(data, X_lengths)
             #loss = F.nll_loss(output, target)
-            #test_loss += model.loss(output,target,X_lengths)*sum(X_lengths)
+            test_loss += model.loss(output,target,X_lengths)*sum(X_lengths)
 
-            target = target.view(-1)
-            # flatten all predictions
-            output = output.view(-1, target_size)
-
-            test_loss += F.nll_loss(output, target, reduction='sum').item()
+            alllen += sum(X_lengths)
+#
+#            target = target.view(-1)
+#            # flatten all predictions
+#            output = output.view(-1, target_size)
+#            test_loss += F.nll_loss(output, target, reduction='sum').item()
 
 
         # for data, target in test_loader:
@@ -330,7 +314,7 @@ def test(args, model, device, X, y, batch_size, target_size, padding_idx, test_n
         #     y_true.append(target)
         #     y_pred.append(pred.view_as(target))
 
-        test_loss /= len(X)
+        test_loss /= alllen
 
     # print('\n{} set: Average loss: {:.4f}, Overall accuracy: {}/{} ({:.0f}%)\n'.format(
     #     test_name, test_loss, correct, len(test_loader.dataset),
@@ -345,9 +329,9 @@ def main():
                         help='input batch size for training (default: 64)')
     parser.add_argument('--test-batch-size', type=int, default=2, metavar='N',
                         help='input batch size for testing (default: 1000)')
-    parser.add_argument('--epochs', type=int, default=100, metavar='N',
+    parser.add_argument('--epochs', type=int, default=1000, metavar='N',
                         help='number of epochs to train (default: 10)')
-    parser.add_argument('--lr', type=float, default=0.001, metavar='LR',
+    parser.add_argument('--lr', type=float, default=0.0001, metavar='LR',
                         help='learning rate (default: 0.01)')
     parser.add_argument('--momentum', type=float, default=0.5, metavar='M',
                         help='SGD momentum (default: 0.5)')
@@ -381,8 +365,8 @@ def main():
     
     fin.close()
     
-    xs=xs[:200]
-    ys=ys[:200]
+    xs=xs[:100]
+    ys=ys[:100]
     
     xtrains, xtests, ytrains, ytests = train_test_split(xs, ys, test_size=0.2, random_state=42)
     
