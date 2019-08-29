@@ -414,31 +414,51 @@ def main():
 #    test_loader = data_utils.DataLoader(test_dataset, batch_size=args.batch_size, shuffle=True, **kwargs)
 
     model = BiLSTMCorrecter(1, config.EMBEDDING_DIM, config.HIDDEN_DIM, len(word_to_ix), len(word_to_ix), word_to_ix['<PAD>']).to(device).double()
-    optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.lr)
+#    optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.lr)
+    
+    while True:
+        sent = input('please input your query, q for quit:')
+        print(sent)
+        if sent.strip() == 'q':
+            break
+        
+        #sent = '重工饭店送'
+        sent = prepare_sequence(sent, word_to_ix)
+        sent = [sent]
+        sent = torch.stack([torch.tensor(i, dtype=torch.long) for i in sent])
+        #print(type(sent))
+        model.load_state_dict(torch.load(config.lstm_model))
+        #inpt = torch.stack([sent])
+        #print(type(sent))
+        output = model(sent,[sent.shape[1]])
+        a = output[0]
+        seq = get_sequence(a,ix_to_word)
+        #idxs = torch.argmax(a, dim=1)
+        print(seq)
 
-
-    train_loss=[]
-    test_loss=[]
-    for epoch in range(1, args.epochs + 1):
-        print('epoch=%d'%epoch)
-        train(args, model, device, X_train, y_train, optimizer, args.batch_size, epoch, len(word_to_ix), word_to_ix['<PAD>'])
-        train_loss.append(test(args, model, device, X_train, y_train, args.batch_size, len(word_to_ix), word_to_ix['<PAD>'], 'Train'))
-        test_loss.append(test(args, model, device, X_test, y_test, args.batch_size, len(word_to_ix), word_to_ix['<PAD>'], 'Test'))
-
-    # train_loss_final, y_train_true, y_train_pred = test(args, model, device, train_loader, 'Train')
-    # test_loss_final, y_test_true, y_test_pred = test(args, model, device, test_loader, 'Test')
-
-    model_name = 'BiLSTMCorrecter'
-
-    fig = plt.figure()
-    plt.plot(train_loss,label='train_loss')
-    plt.plot(test_loss,label='test_loss')
-    plt.legend()
-    plt.show()
-    fig.savefig(r'%s.png'%model_name)
-
-    if (args.save_model):
-        torch.save(model.state_dict(),config.lstm_model)
+#
+#    train_loss=[]
+#    test_loss=[]
+#    for epoch in range(1, args.epochs + 1):
+#        print('epoch=%d'%epoch)
+#        train(args, model, device, X_train, y_train, optimizer, args.batch_size, epoch, len(word_to_ix), word_to_ix['<PAD>'])
+#        train_loss.append(test(args, model, device, X_train, y_train, args.batch_size, len(word_to_ix), word_to_ix['<PAD>'], 'Train'))
+#        test_loss.append(test(args, model, device, X_test, y_test, args.batch_size, len(word_to_ix), word_to_ix['<PAD>'], 'Test'))
+#
+#    # train_loss_final, y_train_true, y_train_pred = test(args, model, device, train_loader, 'Train')
+#    # test_loss_final, y_test_true, y_test_pred = test(args, model, device, test_loader, 'Test')
+#
+#    model_name = 'BiLSTMCorrecter'
+#
+#    fig = plt.figure()
+#    plt.plot(train_loss,label='train_loss')
+#    plt.plot(test_loss,label='test_loss')
+#    plt.legend()
+#    plt.show()
+#    fig.savefig(r'%s.png'%model_name)
+#
+#    if (args.save_model):
+#        torch.save(model.state_dict(),"%s.pt"%model_name)
 
 if __name__ == '__main__':
     main()
