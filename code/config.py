@@ -11,7 +11,7 @@ num_show = 5 # print list number
 num_corpus = 100000
 
 root = r'/root/bytecamp2019'
-#root = r'/Users/bytedance/Documents'
+root = r'/Users/bytedance/Documents'
 
 sohu_path = r'%s/datasets/news_sohusite_xml-utf8-%d.dat'%(root, num_corpus)
 model_path = r'%s/models/3in1-3gram.binary'%(root)
@@ -36,8 +36,9 @@ wiki_file = r'%s/datasets/wiki_zh_clean_space.dat'%root
 webtext_path = r'%s/datasets/webtext2019zh/web_text_zh_train.json'%root
 webtext_clean_path = r'%s/datasets/web_text_zh_train_clean_space.dat'%root
 
-big_generated_txt = r'%s/datasets/search_word_sogou.txt'%root
+big_generated_txt = r'%s/datasets/search_word.txt'%root
 EMBEDDING_DIM = 100
 HIDDEN_DIM = 200
 
 lstm_model = r'%s/models/lstm.model'%(root)
+max_train_n = 100
