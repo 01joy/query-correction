@@ -428,7 +428,7 @@ def main():
         #sent = '重工饭店送'
         sent = prepare_sequence(sent, word_to_ix)
         sent = [sent]
-        sent = torch.stack([torch.tensor(i, dtype=torch.long) for i in sent])
+        sent = torch.stack([torch.tensor(i, dtype=torch.long) for i in sent]).to(device)
         #print(type(sent))
         model.load_state_dict(torch.load(config.lstm_model))
         #inpt = torch.stack([sent])
